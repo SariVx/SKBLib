@@ -1,46 +1,13 @@
-name: Update durations.json
-
-on:
-  push:
-    paths:
-      - '*.opus'
-
-permissions:
-  contents: write  # <-- This is what allows it to commit & push
-
 jobs:
-  generate:
+  update-durations:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+    - name: Check out repository
+      uses: actions/checkout@v3
 
-      - name: Install ffmpeg
-        run: sudo apt-get install -y ffmpeg
+    - name: Update package list
+      run: sudo apt-get update
 
-      - name: Generate durations.json
-        run: |
-          echo '{' > durations.json
-          first=true
-          for f in *.opus; do
-            dur=$(ffprobe -v error -show_entries format=duration \
-              -of default=noprint_wrappers=1:nokey=1 "$f")
-            dur=${dur%%.*}
-            if [ "$first" = true ]; then
-              first=false
-            else
-              echo ',' >> durations.json
-            fi
-            echo "\"$f\": $dur" >> durations.json
-          done
-          echo '}' >> durations.json
-
-      - name: Commit and push durations.json
-        run: |
-          git config --global user.name "SKB Bot"
-          git config --global user.email "bot@skb.local"
-          git add durations.json
-          git commit -m "Auto-update durations.json"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install dependencies
+      run: |
+        sudo apt-get install -y --fix-missing <your-packages-here>
