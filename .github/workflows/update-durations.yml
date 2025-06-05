@@ -6,20 +6,19 @@ on:
       - '*.opus'
 
 permissions:
-  contents: write  # Required to allow committing to the repo
+  contents: write
 
 jobs:
-  update-durations:
+  generate:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Update package list
-        run: sudo apt-get update
-
       - name: Install ffmpeg
-        run: sudo apt-get install -y ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --fix-missing ffmpeg
 
       - name: Generate durations.json
         run: |
