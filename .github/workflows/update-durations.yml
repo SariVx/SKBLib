@@ -5,15 +5,15 @@ on:
     paths:
       - '*.opus'
 
+permissions:
+  contents: write  # <-- This is what allows it to commit & push
+
 jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-
-      - name: Update package lists
-        run: sudo apt-get update
 
       - name: Install ffmpeg
         run: sudo apt-get install -y ffmpeg
@@ -42,3 +42,5 @@ jobs:
           git add durations.json
           git commit -m "Auto-update durations.json"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
