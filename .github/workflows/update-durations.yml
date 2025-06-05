@@ -5,6 +5,9 @@ on:
     paths:
       - '*.opus'
 
+permissions:
+  contents: write  # <-- This is what allows it to commit & push
+
 jobs:
   generate:
     runs-on: ubuntu-latest
@@ -39,3 +42,5 @@ jobs:
           git add durations.json
           git commit -m "Auto-update durations.json"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
